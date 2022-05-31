@@ -1,6 +1,7 @@
-<form action="form.php" method="POST">
+<form action="{{ route('baiviet.store') }}" method="POST">
+    @csrf
     <div>
-        <label for="Title">Title</label>
+        <label for="title">Title:</label>
         <input type="text" id="title" name="title" />
     <div>
         <label for="content">Content:</label>

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Models\ArticleModel;
+use App\Models\Article;
+use Illuminate\Routing\Route;
 
 class ArticleController extends Controller
 {
@@ -16,7 +17,6 @@ class ArticleController extends Controller
     {
         return view('welcome');
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -35,7 +35,12 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $article = new Article;
+        $article->title = $request->title;
+        $article->content = $request->content;
+        $article->save();
+        
+        return redirect()->Route('baiviet.create'); 
     }
 
     /**
