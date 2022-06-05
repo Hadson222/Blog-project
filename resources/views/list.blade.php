@@ -1,4 +1,7 @@
-<h1>Danh sach bai viet </h1>
+<h1>Danh sach bai viet</h1>
+
+@foreach( $articles as $article )
 <div>
-    foreach($article as $article)
+    {{ $article -> title}}
 </div>
+@endforeach

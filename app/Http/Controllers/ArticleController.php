@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Article;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Routing\Route;
 
 class ArticleController extends Controller
@@ -15,7 +16,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return view('welcome');
+        $articles = Article::all();
+        return view('welcome', ['articles' => $articles]);
     }
     /**
      * Show the form for creating a new resource.
@@ -38,9 +40,13 @@ class ArticleController extends Controller
         $article = new Article;
         $article->title = $request->title;
         $article->content = $request->content;
+        $request->validate([
+            'title' => 'required|min:10',
+            'content' => 'required' ,
+        ]);
         $article->save();
         
-        return redirect()->Route('baiviet.create'); 
+        return redirect()->Route('baiviet.index'); 
     }
 
     /**
@@ -49,10 +55,7 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -60,10 +63,12 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function showFormEdit($id=null)
     {
-        //
+        $article = Article::find($id);
+        return view('edit', compact('article'));
     }
+   
 
     /**
      * Update the specified resource in storage.
@@ -74,7 +79,15 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|min:10',
+            'content' => 'required' ,
+        ]);
+        $article = Article::find($id);
+        $article->title = $request->title;
+        $article->content = $request->content;
+        
+        return redirect()->Route('baiviet.index');
     }
 
     /**
@@ -83,8 +96,9 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Article $article)
     {
-        
+        $article->delete();
+        return redirect()->route('baiviet.index')->with('success','Article has been deleted successfully');      
     }
 }
